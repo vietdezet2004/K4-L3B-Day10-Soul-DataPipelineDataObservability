@@ -11,6 +11,9 @@
 
 | STT | Họ và tên | MSSV | Email | Vai trò & Package sở hữu | Báo cáo cá nhân |
 |---:|---|---|---|---|---|
+| 1 | [Họ tên TV1] | [MSSV1] | [Email1] | **Data Ingestion & Corruption Owner** (`src/ingestion/`: `crossref.py`, `cleaning.py`, `corruption.py`, Repair) | `report/<MSSV1>_HoTen.md` |
+| 2 | [Họ tên TV2] | [MSSV2] | [Email2] | **Observability, Eval & Reporting Owner** (`src/observability/` & `src/evaluation/`: `quality.py` GX 1.x, `testset.py`, `reporting.py`) | `report/<MSSV2>_HoTen.md` |
+| 3 | Nguyễn Công Duẩn | 2A202602716 | congduan2554@gmail.com | **RAG, Vector DB & Orchestration Owner** (`src/retrieval/`, `src/pipelines/`: `index.py`, `phase1.py`, `corruption_flow.py`) | `report/2A202602716_NguyenCongDuan.md` |
 | 1 | Phùng Quốc Việt | 2A202602456 | pqviet.ptit@gmail.com | **Data Ingestion & Corruption Owner** (`src/ingestion/`: `crossref.py`, `cleaning.py`, `corruption.py`, Repair) | `report/2A202602456_PhungQuocViet.md` |
 | 2 | Phan Hoàng Vũ | 2A202602450 | hoangvu180225@gmail.com | **Observability, Eval & Reporting Owner** (`src/observability/` & `src/evaluation/`: `quality.py` GX 1.x, `testset.py`, `reporting.py`) | `report/2A202602450_PhanHoangVu.md` |
 | 3 | Nguyễn Công Duẩn | 2A202602716 | duannc.ptit@gmail.com | **RAG, Vector DB & Orchestration Owner** (`src/retrieval/`, `src/pipelines/`: `index.py`, `phase1.py`, `corruption_flow.py`, Live Demo) | `report/2A202602716_NguyenCongDuan.md` |
@@ -57,6 +60,5 @@
   - **CP3:** Ghép nối chu trình sạch trong `phase1.py` và chạy script `python script/run_phase1.py` exit code 0, thu thập `baseline_metrics.json`.
   - **CP4:** Nạp dữ liệu bị tiêm lỗi vào collection `papers-corrupted`, đo lường sự suy giảm chất lượng retrieval và QA của AI (`corrupted_metrics.json`).
   - **CP5:** Ghép nối luồng phục hồi trong `corruption_flow.py` và chạy script `python script/run_corruption_flow.py` exit code 0, thu thập `repaired_metrics.json`.
-  - **CP6:** Trưởng nhóm dẫn dắt kịch bản Live Demo (3-5 phút), trực tiếp thao tác terminal và giải thích hiện tượng Silent Failure của RAG Agent.
 - **Điều học được / Đóng góp chính:**
   - Làm chủ kỹ thuật cô lập Vector Store Collections trong ChromaDB, tích hợp End-to-End Pipeline và chứng minh tác động trực tiếp của Data Observability tới hiệu năng mô hình AI.
