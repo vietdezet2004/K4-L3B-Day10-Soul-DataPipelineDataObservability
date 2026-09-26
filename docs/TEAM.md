@@ -13,7 +13,7 @@
 |---:|---|---|---|---|---|
 | 1 | Phùng Quốc Việt | 2A202602456 | pqviet.ptit@gmail.com | **Data Ingestion & Corruption Owner** (`src/ingestion/`: `crossref.py`, `cleaning.py`, `corruption.py`, Repair) | `report/2A202602456_PhungQuocViet.md` |
 | 2 | Phan Hoàng Vũ | 2A202602450 | hoangvu180225@gmail.com | **Observability, Eval & Reporting Owner** (`src/observability/` & `src/evaluation/`: `quality.py` GX 1.x, `testset.py`, `reporting.py`) | `report/2A202602450_PhanHoangVu.md` |
-| 3 | Nguyễn Công Duẩn | 2A202602716 | duannc.ptit@gmail.com | **RAG, Vector DB & Orchestration Owner** (`src/retrieval/`, `src/pipelines/`: `index.py`, `phase1.py`, `corruption_flow.py`, Live Demo) | `report/2A202602716_NguyenCongDuan.md` |
+| 3 | Nguyễn Công Duẩn | 2A202602716 | duannc.ptit@gmail.com | **RAG, Vector DB & Orchestration Owner** (`src/retrieval/`, `src/pipelines/`: `index.py`, `phase1.py`, `corruption_flow.py`) | `report/2A202602716_NguyenCongDuan.md` |
 
 ---
 
