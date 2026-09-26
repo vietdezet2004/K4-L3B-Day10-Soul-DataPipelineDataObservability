@@ -2,15 +2,15 @@
 
 ## 1. Thông tin cá nhân
 
-| Thông tin         | Nội dung                  |
+| Thông tin | Nội dung |
 | ------------------ | -------------------------- |
-| Họ và tên       | Phan Hoàng Vũ             |
-| MSSV               | 2A202602450               |
-| Khóa/Lớp         | K4                        |
-| Tên nhóm         | Soul                      |
-| Vai trò chính    | TV2: Data Observability & Benchmark Evaluation |
-| Repository         | https://github.com/vietdezet2004/K4-L3B-Day10-Soul-DataPipelineDataObservability.git |
-| Ngày hoàn thành | 2026-09-26                |
+| Họ và tên | Phan Hoàng Vũ |
+| MSSV | 2A202602450 |
+| Khóa/Lớp | K4/L3B |
+| Tên nhóm | Soul |
+| Vai trò chính | TV2: Data Observability & Benchmark Evaluation |
+| Repository | <https://github.com/vietdezet2004/K4-L3B-Day10-Soul-DataPipelineDataObservability.git> |
+| Ngày hoàn thành | 2026-09-26 |
 
 ---
 
@@ -18,7 +18,7 @@
 
 ### Phần việc sở hữu
 
-| Module/deliverable | File/hàm phụ trách | Input nhận vào | Output bàn giao  | Trạng thái |
+| Module/deliverable | File/hàm phụ trách | Input nhận vào | Output bàn giao | Trạng thái |
 | ------------------ | --------------------- | ---------------- | ----------------- | ---------- |
 | **Data Quality Gate (CP1)** | `src/observability/quality.py` (`run_data_quality_checks`) | `df: pd.DataFrame` sau làm sạch của TV1 | `data/quality/*_quality_report.json` | Hoàn thành |
 | **Freshness SLA Monitoring (CP1)** | `src/observability/quality.py` (`build_freshness_report`) | DataFrame và ngưỡng `age_days > 180` | `data/quality/*_freshness_report.json` | Hoàn thành |
@@ -45,6 +45,7 @@
 
 **Output cụ thể tiêu biểu:**
 Báo cáo đối chiếu định lượng [data/reports/corruption_report.md](file:///d:/Hoc/VinAI/K4-L3B-Day10-Soul-DataPipelineDataObservability/data/reports/corruption_report.md) thể hiện đầy đủ bức tranh:
+
 - Baseline: Hit Rate 100%, F1 1.0000, Quality PASS, Freshness FRESH.
 - Corrupted: Hit Rate giảm về 60%, F1 giảm về 0.5000, Quality FAIL, Freshness STALE.
 - Repaired: Hit Rate phục hồi về 100%, F1 phục hồi về 1.0000, Quality PASS, Freshness FRESH.
@@ -54,12 +55,15 @@ Báo cáo đối chiếu định lượng [data/reports/corruption_report.md](fi
 ## 4. Giải thích phần kỹ thuật đã thực hiện
 
 ### Vấn đề cần giải quyết
+
 1. **Ngăn chặn Silent Failure:** Trong các hệ thống RAG truyền thống, dữ liệu bẩn (thiếu trường, text rác, tiêu đề cụt, dữ liệu quá hạn) không làm hệ thống sập nhưng khiến mô hình AI sinh ra câu trả lời sai lệch (hallucination). Cần một chốt kiểm dịch tự động (Quality Gate) chặn dữ liệu xấu trước khi đưa vào Vector Store.
 2. **Đánh giá khách quan:** Cần một bộ đề thi Benchmark có ground-truth tài liệu cố định để đo lường chính xác tác động của lỗi và hiệu quả phục hồi.
 
 ### Cách triển khai
+
 1. **Great Expectations 1.x Fluent API:**
    Sử dụng Ephemeral Data Context hiện đại của GX 1.x:
+
    ```python
    context = gx.get_context(mode="ephemeral")
    data_source = context.data_sources.add_pandas(name="papers_source")
@@ -67,6 +71,7 @@ Báo cáo đối chiếu định lượng [data/reports/corruption_report.md](fi
    batch_def = data_asset.add_batch_definition_whole_dataframe("papers_batch")
    batch = batch_def.get_batch(batch_parameters={"dataframe": df})
    ```
+
    Khai báo 4 Expectations cốt lõi:
    - `ExpectTableRowCountToBeBetween(min_value=10, max_value=1000)`: Đảm bảo số lượng bài nạp đủ ngưỡng.
    - `ExpectColumnValuesToNotBeNull(column="paper_id")`: Đảm bảo không mất ID tài liệu.
@@ -101,9 +106,11 @@ Báo cáo đối chiếu định lượng [data/reports/corruption_report.md](fi
 | Điều kiện lỗi xử lý | Xử lý DataFrame rỗng, trường hợp thiếu cột, trường hợp không có bài báo nào hợp lệ |
 
 ### Cách xác minh
+
 ```bash
 python -c "from core.config import load_settings; from observability.quality import run_data_quality_checks; import pandas as pd; s=load_settings(); df=pd.read_json(s.paths.clean_json); res=run_data_quality_checks(df, s, 'test'); print(f'Tín hiệu hoàn thành: Quality check status = {res[\"success\"]}')"
 ```
+
 - **Kết quả mong đợi:** `Quality check status = True`
 - **Kết quả thực tế:** Đúng như mong đợi (`success=True`), toàn bộ 4 Expectation đều Pass.
 
@@ -123,9 +130,11 @@ python -c "from core.config import load_settings; from observability.quality imp
 ## 6. Một lỗi hoặc blocker đã xử lý
 
 - **Triệu chứng/lỗi nguyên văn:**
+
   ```text
   UnicodeEncodeError: 'charmap' codec can't encode character '\u1ea2' in position 12: character maps to <undefined>
   ```
+
 - **Lệnh hoặc bước tái hiện:** Chạy `python script/run_corruption_flow.py` trên Windows PowerShell khi in bảng kết quả terminal.
 - **Nguyên nhân gốc:** Bảng đối chiếu console chứa tiêu đề tiếng Việt có dấu (`BẢNG ĐỐI CHIẾU...`), trong khi stdout trên Windows mặc định mã hóa bằng cp1252 không hỗ trợ các ký tự Unicode tiếng Việt đặc thù.
 - **Cách xử lý:** Thêm xử lý `sys.stdout.reconfigure(encoding="utf-8")` an toàn vào luồng pipeline để ép stream stdout sang UTF-8.
@@ -169,6 +178,7 @@ python -c "from core.config import load_settings; from observability.quality imp
 | Freshness status       |    FRESH |     STALE |    FRESH | Bắt trúng kịch bản lùi ngày quá hạn 180 ngày |
 
 ### Kết luận từ số liệu
+
 1. **[Data Corruption] ➔ [Quality FAIL & Freshness STALE] ➔ [Hit Rate giảm từ 100% xuống 60%, F1 giảm từ 1.0 xuống 0.5]**:
    Minh chứng sống động cho hiện tượng **Silent Failure**. Không có lỗi runtime nào xảy ra, hệ thống vẫn trả lời nhưng chất lượng câu trả lời đã suy sụp nếu không có Data Observability Gate cảnh báo trước.
 2. **[Idempotent Repair] ➔ [Quality PASS & Freshness FRESH] ➔ [Hit Rate đạt 100%, F1 đạt 1.0000]**:
@@ -179,9 +189,11 @@ python -c "from core.config import load_settings; from observability.quality imp
 ## 9. Điều học được và hướng cải thiện
 
 ### Ba điều quan trọng nhất
+
 1. **Data Observability không phải là kiểm thử tĩnh:** Cần kết hợp cả Data Quality Gate (cấu trúc) và Freshness SLA (thời gian) để giám sát dữ liệu sống liên tục trong luồng pipeline.
 2. **Nguy cơ Silent Failure trong hệ thống AI/RAG:** Một pipeline không có cảnh báo dữ liệu thì mọi lỗi chất lượng dữ liệu ở tầng dưới đều âm thầm lan truyền lên tầng AI, gây sai lệch nghiêm trọng tới người dùng cuối.
 3. **Giá trị của Idempotency và Raw Data Preservation:** Giữ gìn nguyên vẹn dữ liệu gốc trước khi biến đổi là nền tảng cốt tử để hệ sinh thái dữ liệu có năng lực tự phục hồi (Self-healing).
 
 ### Nếu có thêm thời gian
+
 Tôi muốn tích hợp thêm **Continuous Drift Monitoring** (giám sát độ trôi dạt phân phối vector embedding) để tự động kích hoạt cảnh báo khi phân bố khoảng cách cosine giữa các vector bài báo mới có dấu hiệu bất thường so với phân bố chuẩn.
